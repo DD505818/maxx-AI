@@ -1,14 +1,16 @@
-# maxx-AI
+# MAXX-AI Sample Package
 
-This repository contains a full stack AI trading application. The backend is built with FastAPI and the frontend uses Next.js. Docker is used for local development and deployment.
+This archive contains a minimal yet runnable slice of the MAXX-AI stack:
 
-## Running the app
+- **backend/services/agent_orchestrator.py** — AutoGen multi-agent orchestrator.
+- **backend/services/trading_engine.py** — Async trading loop core.
+- **backend/Dockerfile.agents** + **requirements.agent.txt** — container.
+- **infra/docker/docker-compose.yml** — Compose file with `models:` block.
+
+## Quick start
 
 ```bash
-cd docker && docker-compose up --build -d
+docker compose -f infra/docker/docker-compose.yml up --build
 ```
 
-The backend will be available on `http://localhost:8000` and the frontend on `http://localhost:3000`.
-
-## Roadmap
-- [ ] Integrate Google MCP Toolbox for agent‑safe DB access.
+This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend in seconds.
