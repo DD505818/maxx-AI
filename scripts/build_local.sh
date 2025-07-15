@@ -1,2 +1,2 @@
 #!/bin/bash
-cd "$(dirname "$0")/../infra/docker" && docker compose up --build -d
+cd "$(dirname "$0")/../docker" && docker compose up --build -d
