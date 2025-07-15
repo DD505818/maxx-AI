@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: maxx-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: gcr.io/${GCP_PROJECT}/maxx-backend:${IMAGE_TAG}
+          env:
+            - name: ORCH_URL
+              value: http://orchestrator:8080
+          ports:
+            - containerPort: 8001
+          securityContext:
+            readOnlyRootFilesystem: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: maxx-ai
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8000
+      targetPort: 8001
+  type: ClusterIP

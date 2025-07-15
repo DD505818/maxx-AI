@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redpanda
+  namespace: maxx-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redpanda
+  template:
+    metadata:
+      labels:
+        app: redpanda
+    spec:
+      containers:
+        - name: redpanda
+          image: redpandadata/redpanda:v23.2
+          args: ["start", "--mode", "dev-container"]
+          ports:
+            - containerPort: 9092
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          securityContext:
+            readOnlyRootFilesystem: true
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redpanda
+  namespace: maxx-ai
+spec:
+  selector:
+    app: redpanda
+  ports:
+    - port: 9092
+      targetPort: 9092

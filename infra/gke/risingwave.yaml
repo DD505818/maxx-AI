@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: risingwave
+  namespace: maxx-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: risingwave
+  template:
+    metadata:
+      labels:
+        app: risingwave
+    spec:
+      containers:
+        - name: risingwave
+          image: risingwavelabs/risingwave:1.7
+          ports:
+            - containerPort: 4567
+          securityContext:
+            readOnlyRootFilesystem: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: risingwave
+  namespace: maxx-ai
+spec:
+  selector:
+    app: risingwave
+  ports:
+    - port: 4567
+      targetPort: 4567
