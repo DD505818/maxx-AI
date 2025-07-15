@@ -17,6 +17,7 @@ This archive contains a minimal yet runnable slice of the MAXX-AI stack:
 
 - **backend/api/orchestrator.py** — AutoGen multi-agent orchestrator.
 - **backend/services/trading_engine.py** — Async trading loop core.
+- **backend/services/risk_manager.py** — Drawdown and position risk guard.
 - **docker/backend.Dockerfile** + **requirements.agent.txt** — container.
 - **docker/docker-compose.yml** — Compose file with `models:` block.
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import time
-from typing import Any
+from typing import Any, List
 
 from .alpha_ensemble import AlphaEngine
 from .market_data import TickSubscriber
@@ -26,7 +26,7 @@ class TradingEngine:
         self.alpha = AlphaEngine()
         self.router = Router()
         self.risk = RiskSentinel()
-        self.ws_queues: list[asyncio.Queue[Any]] = []
+        self.ws_queues: List[asyncio.Queue[Any]] = []
 
     async def state_stream(self) -> Any:
         """Yield engine state for websocket clients."""
@@ -55,6 +55,9 @@ class TradingEngine:
                 continue
             qty = self.alpha.size(tick.price, self.risk.balance, alpha)
             if qty <= 0:
+                continue
+            trade_qty = qty if alpha > 0 else -qty
+            if not self.risk.can_trade(tick.symbol, trade_qty, tick.price):
                 continue
             plan = PlanV2(
                 timestamp=time.time(),
