@@ -1,14 +1,11 @@
-# maxx-AI
+# MAXX-AI
 
-This repository contains a full stack AI trading application. The backend is built with FastAPI and the frontend uses Next.js. Docker is used for local development and deployment.
+Full-stack async trading platform using FastAPI backend and Next.js frontend.
 
-## Running the app
+## Running Locally
 
 ```bash
-cd docker && docker-compose up --build -d
+./scripts/build_local.sh
 ```
 
-The backend will be available on `http://localhost:8000` and the frontend on `http://localhost:3000`.
-
-## Roadmap
-- [ ] Integrate Google MCP Toolbox for agent‑safe DB access.
+Then open http://localhost:3000.
