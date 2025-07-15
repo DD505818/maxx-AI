@@ -21,11 +21,16 @@ logger = logging.getLogger("MAXXAI_ENGINE")
 class TradingEngine:
     """End-to-end trade loop."""
 
-    def __init__(self) -> None:
-        self.tick_sub = TickSubscriber(["BTCUSD", "ETHUSD", "EURUSD"])
+    def __init__(
+        self,
+        starting_balance: float = 100_000.0,
+        tick_delay: float = 0.5,
+        order_delay: float = 0.1,
+    ) -> None:
+        self.tick_sub = TickSubscriber(["BTCUSD", "ETHUSD", "EURUSD"], delay=tick_delay)
         self.alpha = AlphaEngine()
-        self.router = Router()
-        self.risk = RiskSentinel()
+        self.router = Router(delay=order_delay)
+        self.risk = RiskSentinel(starting_balance=starting_balance)
         self.ws_queues: list[asyncio.Queue[Any]] = []
 
     async def state_stream(self) -> Any:
@@ -42,10 +47,14 @@ class TradingEngine:
         for q in self.ws_queues:
             await q.put(state)
 
-    async def start(self) -> None:
+    async def start(self, ticks: int | None = None, ignore_session: bool = False) -> None:
+        count = 0
         async for tick in self.tick_sub.stream():
+            count += 1
+            if ticks is not None and count > ticks:
+                break
             self.alpha.update(tick.symbol, tick.price)
-            if not session_active():
+            if not ignore_session and not session_active():
                 continue
             sent = await sentiment_factor()
             alpha = self.alpha.score(tick.symbol) * (1 + 0.5 * sent)

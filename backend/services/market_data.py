@@ -19,14 +19,15 @@ class Tick:
 class TickSubscriber:
     """Simulates subscription to a live market data feed."""
 
-    def __init__(self, symbols: Iterable[str]):
+    def __init__(self, symbols: Iterable[str], delay: float = 0.5):
         self.symbols = list(symbols)
+        self.delay = float(delay)
 
     async def stream(self) -> AsyncGenerator[Tick, None]:
         """Yield ticks indefinitely."""
         prices = {s: random.uniform(100, 50000) for s in self.symbols}
         while True:
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(self.delay)
             sym = random.choice(self.symbols)
             delta = random.uniform(-0.5, 0.5)
             prices[sym] = max(1.0, prices[sym] * (1 + delta / 100))
