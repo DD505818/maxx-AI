@@ -1,3 +1,16 @@
+
+# MAXX-AI
+
+Full-stack async trading platform using FastAPI backend and Next.js frontend.
+
+## Running Locally
+
+```bash
+./scripts/build_local.sh
+```
+
+Then open http://localhost:3000.
+=======
 # MAXX-AI Sample Package
 
 This archive contains a minimal yet runnable slice of the MAXX-AI stack:
@@ -14,3 +27,4 @@ docker compose -f infra/docker/docker-compose.yml up --build
 ```
 
 This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend in seconds.
+
