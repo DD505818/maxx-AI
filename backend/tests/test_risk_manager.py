@@ -6,3 +6,8 @@ def test_drawdown_halt() -> None:
     fill = Fill(order_id="1", symbol="BTCUSD", side="BUY", qty=50, price=100)
     risk.update(fill)
     assert risk.halt
+
+
+def test_start_balance() -> None:
+    risk = RiskSentinel(start_balance=500)
+    assert risk.balance == 500

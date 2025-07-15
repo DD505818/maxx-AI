@@ -21,11 +21,17 @@ logger = logging.getLogger("MAXXAI_ENGINE")
 class TradingEngine:
     """End-to-end trade loop."""
 
-    def __init__(self) -> None:
-        self.tick_sub = TickSubscriber(["BTCUSD", "ETHUSD", "EURUSD"])
+    def __init__(
+        self,
+        tick_sub: TickSubscriber | None = None,
+        risk: RiskSentinel | None = None,
+    ) -> None:
+        """Create a trading engine with optional dependencies."""
+
+        self.tick_sub = tick_sub or TickSubscriber(["BTCUSD", "ETHUSD", "EURUSD"])
         self.alpha = AlphaEngine()
         self.router = Router()
-        self.risk = RiskSentinel()
+        self.risk = risk or RiskSentinel()
         self.ws_queues: list[asyncio.Queue[Any]] = []
 
     async def state_stream(self) -> Any:
@@ -78,3 +84,32 @@ class TradingEngine:
                     "status": "LIVE",
                 }
             )
+
+    async def run(self, max_ticks: int) -> None:
+        """Run the trading loop for a finite number of ticks."""
+
+        count = 0
+        async for tick in self.tick_sub.stream():
+            self.alpha.update(tick.symbol, tick.price)
+            sent = await sentiment_factor()
+            alpha = self.alpha.score(tick.symbol) * (1 + 0.5 * sent)
+            if abs(alpha) >= 0.25 and not self.risk.halt:
+                qty = self.alpha.size(tick.price, self.risk.balance, alpha)
+                if qty > 0:
+                    plan = PlanV2(
+                        timestamp=time.time(),
+                        legs=[
+                            Leg(
+                                symbol=tick.symbol,
+                                side="BUY" if alpha > 0 else "SELL",
+                                qty=qty,
+                                broker=self.router.best_venue(tick.symbol),
+                                price=tick.price,
+                            )
+                        ],
+                    )
+                    fill = await self.router.execute(plan.legs[0])
+                    self.risk.update(fill)
+            count += 1
+            if count >= max_ticks:
+                break
