@@ -32,5 +32,11 @@ This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend i
 
 Copy `.env.example` to `.env` and provide values for the listed variables. Never commit real secrets to the repository.
 
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `ORCH_URL` | Base URL of the orchestrator service | `http://localhost:8080` |
+| `NEXT_PUBLIC_WS_URL` | WebSocket endpoint for frontend updates | `ws://localhost:8000/ws/agents` |
+| `MAX_DRAWDOWN_PCT` | Max intraday drawdown before halt | `0.05` |
+
 
 See `docs/gke_deploy.md` for Kubernetes deployment instructions.

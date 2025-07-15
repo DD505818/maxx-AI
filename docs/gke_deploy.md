@@ -27,3 +27,11 @@ Run the helper script from the repository root:
 ```
 
 The script builds images, pushes them to `gcr.io/$GCP_PROJECT`, and applies the manifests in `infra/gke/`.
+
+Verify container signatures before rollout:
+
+```bash
+cosign verify "$GCP_PROJECT"/backend:latest
+cosign verify "$GCP_PROJECT"/orchestrator:latest
+cosign verify "$GCP_PROJECT"/frontend:latest
+```
