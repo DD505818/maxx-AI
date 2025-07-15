@@ -18,7 +18,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 kubectl apply -f "$ROOT_DIR/infra/gke/namespace.yaml"
 for f in "$ROOT_DIR"/infra/gke/*.yaml; do
     [ "$f" != "$ROOT_DIR/infra/gke/namespace.yaml" ] || continue
-    kubectl apply -f "$f"
+    envsubst < "$f" | kubectl apply -f -
 done
 
 echo "Deployment complete."

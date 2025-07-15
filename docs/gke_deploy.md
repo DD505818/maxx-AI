@@ -24,4 +24,7 @@ This guide outlines the steps to launch the MAXX-AI stack on GKE. It assumes you
    ./scripts/deploy_gke.sh
    ```
 
-The script retrieves cluster credentials and applies all manifests from `infra/gke/`. Ensure your `.env` file defines the required variables (`GCP_PROJECT`, `GKE_CLUSTER`, `GKE_ZONE`, `IMAGE_TAG`).
+   The script retrieves cluster credentials and applies all manifests from
+   `infra/gke/`, expanding any `${VAR}` placeholders via `envsubst`. Ensure your
+   `.env` file defines the required variables (`GCP_PROJECT`, `GKE_CLUSTER`,
+   `GKE_ZONE`, `IMAGE_TAG`).
