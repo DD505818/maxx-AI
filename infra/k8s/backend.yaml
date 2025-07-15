@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maxx-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maxx-backend
+  template:
+    metadata:
+      labels:
+        app: maxx-backend
+    spec:
+      containers:
+      - name: backend
+        image: gcr.io/$PROJECT_ID/maxx-backend:latest
+        ports:
+        - containerPort: 8001
+        env:
+        - name: ORCH_URL
+          value: "http://localhost:8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maxx-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: maxx-backend
+  ports:
+  - name: http
+    port: 8001
+    targetPort: 8001

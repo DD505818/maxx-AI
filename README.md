@@ -34,3 +34,12 @@ This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend i
 
 Copy `.env.example` to `.env` and provide values for the listed variables. Never commit real secrets to the repository.
 
+
+## Deploying to GKE
+
+```bash
+source .env
+./scripts/deploy_gke.sh
+```
+
+This script builds container images with `gcloud builds submit` and applies manifests from `infra/k8s` to your configured cluster.
