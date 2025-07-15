@@ -1,0 +1,4 @@
+weights:
+  momentum: 0.50
+  sentiment: 0.30
+  mean_reversion: 0.20
