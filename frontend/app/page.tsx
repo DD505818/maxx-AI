@@ -1,3 +1,3 @@
-export default function Home() {
-  return <div>MAXX-AI Dashboard</div>;
-}
+import HomePage from './HomePage';
+
+export default HomePage;

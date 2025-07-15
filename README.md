@@ -6,26 +6,24 @@ Full-stack async trading platform using FastAPI backend and Next.js frontend.
 ## Running Locally
 
 ```bash
-./scripts/build_local.sh
+cd docker && docker-compose up --build -d
 ```
 
-# Then open the dashboard
-
-Then open http://localhost:3000.
+Then open http://localhost:3000 to view the dashboard.
 
 # MAXX-AI Sample Package
 
 This archive contains a minimal yet runnable slice of the MAXX-AI stack:
 
-- **backend/services/agent_orchestrator.py** — AutoGen multi-agent orchestrator.
+- **backend/api/orchestrator.py** — AutoGen multi-agent orchestrator.
 - **backend/services/trading_engine.py** — Async trading loop core.
-- **backend/Dockerfile.agents** + **requirements.agent.txt** — container.
-- **infra/docker/docker-compose.yml** — Compose file with `models:` block.
+- **docker/backend.Dockerfile** + **requirements.agent.txt** — container.
+- **docker/docker-compose.yml** — Compose file with `models:` block.
 
 ## Quick start
 
 ```bash
-docker compose -f infra/docker/docker-compose.yml up --build
+cd docker && docker-compose up --build -d
 ```
 
 This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend in seconds.
