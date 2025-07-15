@@ -9,8 +9,10 @@ Full-stack async trading platform using FastAPI backend and Next.js frontend.
 ./scripts/build_local.sh
 ```
 
+# Then open the dashboard
+
 Then open http://localhost:3000.
-=======
+
 # MAXX-AI Sample Package
 
 This archive contains a minimal yet runnable slice of the MAXX-AI stack:
@@ -27,4 +29,8 @@ docker compose -f infra/docker/docker-compose.yml up --build
 ```
 
 This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend in seconds.
+
+## Environment variables
+
+Copy `.env.example` to `.env` and provide values for the listed variables. Never commit real secrets to the repository.
 
