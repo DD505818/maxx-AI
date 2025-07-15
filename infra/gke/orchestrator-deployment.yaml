@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: orchestrator
   namespace: maxx-ai
+  annotations:
+    cosign.sigstore.dev/message: "verified"
 spec:
   replicas: 1
   selector:
@@ -21,6 +23,15 @@ spec:
           value: "http://llama3:8000/v1"
         ports:
         - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        securityContext:
+          readOnlyRootFilesystem: true
         readinessProbe:
           httpGet:
             path: /healthz
