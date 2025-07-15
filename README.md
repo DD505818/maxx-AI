@@ -34,3 +34,5 @@ This will spin vLLM (GPU), orchestrator, Redpanda, RisingWave, and the backend i
 
 Copy `.env.example` to `.env` and provide values for the listed variables. Never commit real secrets to the repository.
 
+
+See `docs/gke_deploy.md` for Kubernetes deployment instructions.
