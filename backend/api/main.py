@@ -7,6 +7,7 @@ import logging
 from typing import AsyncGenerator
 
 from fastapi import FastAPI, WebSocket
+from starlette.websockets import WebSocketDisconnect
 
 from ..services.trading_engine import TradingEngine
 from ..models.agent_state import AgentState
@@ -29,6 +30,9 @@ async def healthz() -> dict[str, str]:
 @app.websocket("/ws/agents")
 async def agents_ws(ws: WebSocket) -> None:
     await ws.accept()
-    async for state in engine.state_stream():
-        data = AgentState(**state)
-        await ws.send_json(data.__dict__)
+    try:
+        async for state in engine.state_stream():
+            data = AgentState(**state)
+            await ws.send_json(data.__dict__)
+    except WebSocketDisconnect:
+        logger.info("client disconnected")

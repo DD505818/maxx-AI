@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from backend.utils.settings import settings
 
 @dataclass
 class Fill:
@@ -15,9 +16,11 @@ class Fill:
 
 
 class RiskSentinel:
-    """Simple risk management with drawdown halt."""
+    """Simple risk management with configurable drawdown halt."""
 
-    def __init__(self) -> None:
+    def __init__(self, max_dd: float | None = None) -> None:
+        self.max_dd = max_dd if max_dd is not None else settings.max_drawdown_pct
+        self.max_dd = max(0.0, min(1.0, self.max_dd))
         self.balance = 100_000.0
         self.day_start = self.balance
         self.halt = False
@@ -29,7 +32,7 @@ class RiskSentinel:
         self.fills.append(fill)
         delta = fill.qty * (fill.price if fill.side == "SELL" else -fill.price)
         self.balance += delta
-        if self.intraday_dd() >= 0.05:
+        if self.intraday_dd() >= self.max_dd:
             self.halt = True
 
     def unrealized_pnl(self) -> float:
