@@ -20,11 +20,11 @@ spec:
         - name: ORCH_URL
           value: http://orchestrator:8080
         ports:
-        - containerPort: 8001
+        - containerPort: 8000
         readinessProbe:
           httpGet:
             path: /healthz
-            port: 8001
+            port: 8000
           initialDelaySeconds: 5
           periodSeconds: 10
 ---
@@ -37,5 +37,5 @@ spec:
   selector:
     app: backend
   ports:
-  - port: 8001
-    targetPort: 8001
+  - port: 8000
+    targetPort: 8000

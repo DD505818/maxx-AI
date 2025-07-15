@@ -18,8 +18,8 @@ services:
       - '4567:4567'
   orchestrator:
     build:
-      context: ../backend
-      dockerfile: ../docker/backend.Dockerfile
+      context: ..
+      dockerfile: ../Dockerfile.orchestrator
     env_file: ../.env
     depends_on:
       - llama3

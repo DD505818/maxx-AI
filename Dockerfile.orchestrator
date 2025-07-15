@@ -3,5 +3,5 @@ WORKDIR /app
 COPY backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY backend ./backend
-COPY agent_orchestrator.py ./
-CMD ["python", "agent_orchestrator.py"]
+# Run orchestrator module directly
+CMD ["python", "-m", "backend.api.orchestrator"]
