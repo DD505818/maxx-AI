@@ -1,6 +1,6 @@
 # MAXX‑Ai Agents Specification
 
-*Version 1.0 · Last updated: 2025‑07‑13*
+*Version 1.2 - Last updated: 2025-07-14*
 
 ---
 Here’s your enhanced, future-proof, and production-ready MAXX-Ai Agents Specification—fully aligned with best practices, modern agent design, and today’s AI/infra stack. This revision sharpens security, extensibility, and composability, and tightly integrates new features for observability and automated recovery. Each section is direct and actionable for devs, ops, and researchers.
@@ -10,7 +10,7 @@ Here’s your enhanced, future-proof, and production-ready MAXX-Ai Agents Specif
 
 MAXX-Ai Agents Specification
 
-Version 1.1 · Last updated: 2025‑07‑13
+Version 1.2 - Last updated: 2025-07-14
 
 
 ---
