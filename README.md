@@ -40,3 +40,4 @@ Copy `.env.example` to `.env` and provide values for the listed variables. Never
 
 
 See `docs/gke_deploy.md` for Kubernetes deployment instructions.
+For Cloud Run and Firebase setup, see `docs/cloud_run_firebase.md`.
