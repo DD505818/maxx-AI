@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package maxx;
+
+message OrderRequest {
+  string symbol = 1;
+  double qty = 2;
+  string side = 3;
+}
+
+message OrderAck {
+  string id = 1;
+  bool accepted = 2;
+}
+
+message CancelRequest {
+  string order_id = 1;
+}
+
+message CancelAck {
+  string order_id = 1;
+  bool cancelled = 2;
+}
+
+message QuoteRequest {
+  string symbol = 1;
+}
+
+message Quote {
+  double bid = 1;
+  double ask = 2;
+}
+
+service ExecutionService {
+  rpc SubmitOrder(OrderRequest) returns (OrderAck);
+  rpc CancelOrder(CancelRequest) returns (CancelAck);
+  rpc GetQuote(QuoteRequest) returns (Quote);
+}
