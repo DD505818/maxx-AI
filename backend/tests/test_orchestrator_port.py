@@ -6,4 +6,3 @@ def test_server_port_env(monkeypatch):
     assert server_port() == 5555
     monkeypatch.delenv("PORT", raising=False)
     assert server_port() == 8080
-

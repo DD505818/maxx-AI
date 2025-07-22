@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import AsyncGenerator
 
 from fastapi import FastAPI, WebSocket
 from starlette.websockets import WebSocketDisconnect
