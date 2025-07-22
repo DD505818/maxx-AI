@@ -1,4 +1,4 @@
 fastapi
 uvicorn[standard]
 pandas
-pandas_ta
+python-multipart
