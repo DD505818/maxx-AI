@@ -7,7 +7,6 @@ from datetime import datetime
 from typing import Dict, List, Tuple
 
 import pandas as pd
-import pandas_ta as ta
 
 from .broker_service import BrokerService
 from .real_time_data_service import RealTimeDataService
@@ -24,6 +23,16 @@ from ..strategies.breakout_strategy import BreakoutStrategy
 from ..strategies.orb_strategy import ORBStrategy
 
 logger = logging.getLogger("TradingService")
+
+
+def atr(high: pd.Series, low: pd.Series, close: pd.Series, length: int = 14) -> pd.Series:
+    """Return the Average True Range for the given price series."""
+    prev_close = close.shift(1)
+    tr = pd.concat(
+        [(high - low).abs(), (high - prev_close).abs(), (low - prev_close).abs()],
+        axis=1,
+    ).max(axis=1)
+    return tr.rolling(length).mean()
 
 
 class TradingService:
@@ -98,7 +107,7 @@ class TradingService:
         if data.empty:
             logger.warning("No data for %s", symbol)
             return []
-        data["atr"] = ta.atr(data.high, data.low, data.close, length=14)
+        data["atr"] = atr(data.high, data.low, data.close, length=14)
         signals: List[Tuple[str, float, str, float]] = []
         for name, strat in self.strategies.items():
             signal, confidence = (
@@ -217,7 +226,7 @@ class TradingService:
         equity_curve = [cash]
         trades: List[dict] = []
         df = df.copy()
-        df["atr"] = ta.atr(df.high, df.low, df.close, length=14)
+        df["atr"] = atr(df.high, df.low, df.close, length=14)
         for i in range(2, len(df)):
             data_slice = df.iloc[: i + 1]
             signal, _conf = strategy_obj.generate_signal(data_slice)

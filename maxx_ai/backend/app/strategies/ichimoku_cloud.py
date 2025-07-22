@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import pandas as pd
-import pandas_ta as ta
 from typing import Tuple
 
 
@@ -12,6 +11,7 @@ class IchimokuCloud:
     def generate_signal(self, data: pd.DataFrame) -> Tuple[str | None, float]:
         if len(data) < 60:
             return None, 0.0
+        import pandas_ta as ta
         ichi = ta.ichimoku(data.high, data.low, data.close)
         conv = ichi[0]
         base = ichi[1]

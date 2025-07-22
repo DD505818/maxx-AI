@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import pandas as pd
-import pandas_ta as ta
 from typing import Tuple
 
 
@@ -12,6 +11,7 @@ class BollingerSqueeze:
     def generate_signal(self, data: pd.DataFrame) -> Tuple[str | None, float]:
         if len(data) < 30:
             return None, 0.0
+        import pandas_ta as ta
         bb = ta.bbands(data.close)
         width = (bb["BBU_20_2.0"] - bb["BBL_20_2.0"]) / bb["BBM_20_2.0"]
         if width.iloc[-2] < width.quantile(0.1) and width.iloc[-1] > width.iloc[-2]:

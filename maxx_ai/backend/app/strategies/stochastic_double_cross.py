@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import pandas as pd
-import pandas_ta as ta
 from typing import Tuple
 
 
@@ -12,6 +11,7 @@ class StochasticDoubleCross:
     def generate_signal(self, data: pd.DataFrame) -> Tuple[str | None, float]:
         if len(data) < 15:
             return None, 0.0
+        import pandas_ta as ta
         stoch = ta.stoch(data.high, data.low, data.close)
         k = stoch["STOCHk_14_3_3"]
         d = stoch["STOCHd_14_3_3"]

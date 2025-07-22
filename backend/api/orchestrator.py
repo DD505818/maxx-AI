@@ -1,15 +1,16 @@
 import os
 
 import uvicorn
-from autogen import Agent, GroupChat  # type: ignore
 from fastapi import FastAPI
 
 MODEL_URL = os.getenv("MODEL_ENDPOINT", "http://localhost:8000/v1")
 cfg = [{"model": "llama3", "base_url": MODEL_URL}]
 
 
-def get_chat() -> GroupChat:
+def get_chat() -> "GroupChat":
     """Instantiate and cache the group chat."""
+    from autogen import Agent, GroupChat  # type: ignore
+
     if not hasattr(get_chat, "_chat"):
         market_scout = Agent("Scout", cfg, tools=["market_feed"])
         alpha_research = Agent("Researcher", cfg, tools=["backtest", "python"])
