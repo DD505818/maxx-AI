@@ -1,4 +1,10 @@
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # pragma: no cover - for type checking only
+    from autogen import GroupChat
 
 import uvicorn
 from fastapi import FastAPI

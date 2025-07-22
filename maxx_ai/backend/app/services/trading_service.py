@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import pandas as pd
 
@@ -128,23 +128,29 @@ class TradingService:
             ):
                 logger.warning("Risk limit reached for %s", name)
                 return signals
-            atr = data["atr"].iloc[-1]
+            atr_value = data["atr"].iloc[-1]
             stop_loss = (
                 price - price * params["stop_loss_factor"]
                 if signal == "buy"
                 else price + price * params["stop_loss_factor"]
             )
             take_profit = (
-                price + atr * params["stop_loss_factor"] * 3.5
+                price + atr_value * params["stop_loss_factor"] * 3.5
                 if signal == "buy"
-                else price - atr * params["stop_loss_factor"] * 3.5
+                else price - atr_value * params["stop_loss_factor"] * 3.5
             )
             size = self.calculate_position_size(
                 price, stop_loss, params["position_size"], params["leverage"]
             )
             if size > 0:
                 await self.execute_trade(
-                    symbol, signal, price, size, stop_loss, take_profit, name
+                    symbol,
+                    signal,
+                    price,
+                    size,
+                    stop_loss,
+                    take_profit,
+                    name,
                 )
         return signals
 
@@ -166,8 +172,14 @@ class TradingService:
         strategy_name: str,
     ) -> None:
         try:
-            order = await self.broker_service.execute_order(
-                symbol, signal, size, price, stop_loss, take_profit, leverage=self.risk_params[strategy_name]["leverage"]
+            await self.broker_service.execute_order(
+                symbol,
+                signal,
+                size,
+                price,
+                stop_loss,
+                take_profit,
+                leverage=self.risk_params[strategy_name]["leverage"],
             )
             if signal == "buy":
                 self.portfolio["positions"][symbol] = {
@@ -233,7 +245,6 @@ class TradingService:
             price = data_slice.close.iloc[-1]
             if signal == "buy" and not positions:
                 stop_loss = price - price * self.risk_params[strategy_name]["stop_loss_factor"]
-                take_profit = price + data_slice.atr.iloc[-1] * self.risk_params[strategy_name]["stop_loss_factor"] * 3.5
                 size = self.calculate_position_size(
                     price,
                     stop_loss,
