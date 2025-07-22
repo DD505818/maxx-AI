@@ -41,15 +41,3 @@ Copy `.env.example` to `.env` and provide values for the listed variables. Never
 
 See `docs/gke_deploy.md` for Kubernetes deployment instructions.
 
-## Deploy to Cloud Run
-
-Build and deploy the backend container using the provided `Dockerfile`:
-
-```bash
-gcloud builds submit --tag gcr.io/PROJECT_ID/maxx-backend
-gcloud run deploy maxx-backend --image gcr.io/PROJECT_ID/maxx-backend --platform managed --region REGION
-```
-
-Cloud Run sets the `$PORT` environment variable automatically. The images and
-Dockerfiles have been updated to respect this value.
-

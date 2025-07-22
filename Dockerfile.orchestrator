@@ -1,7 +1,18 @@
 FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
 WORKDIR /app
-COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-COPY backend ./backend
+
+COPY requirements.agent.txt ./requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && adduser --disabled-password --home /app appuser \
+    && chown -R appuser /app
+
 COPY backend/api/orchestrator.py ./agent_orchestrator.py
+
+USER appuser
+
 CMD ["python", "agent_orchestrator.py"]

@@ -3,38 +3,30 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import Iterable, List
+from typing import Iterable, List, Mapping
+
+import os
+import yaml
 
 import numpy as np
 
 
 class AlphaEngine:
-    """Blend momentum, mean reversion, and breakout signals."""
+    """Blend momentum, sentiment, and mean reversion signals."""
 
-    def __init__(self, symbols: Iterable[str] | None = None) -> None:
-        symbols = symbols or ["BTCUSD", "ETHUSD", "EURUSD"]
-        self.prices: dict[str, deque[float]] = {
-            sym: deque(maxlen=200) for sym in symbols
-        }
+    DEFAULT_WEIGHTS = {
+        "momentum": 0.5,
+        "sentiment": 0.3,
+        "mean_reversion": 0.2,
+    }
 
-    def update(self, symbol: str, price: float) -> None:
-        self.prices[symbol].append(price)
-
-    def score(self, symbol: str) -> float:
-        p: List[float] = list(self.prices[symbol])
-        if len(p) < 50:
-            return 0.0
-        mom = np.tanh(np.polyfit(range(len(p)), p, 1)[0] * 100)
-        mean_rev = -np.tanh(
-            (p[-1] - np.mean(p[-20:])) / (np.std(p[-20:]) + 1e-9)
-        )
-        high, low = max(p[-50:]), min(p[-50:])
-        breakout = (
-            1.0
-            if p[-1] >= high * 0.995
-            else -1.0 if p[-1] <= low * 1.005 else 0.0
-        )
-        return 0.5 * mom + 0.3 * mean_rev + 0.2 * breakout
+<<<<
+        mean_rev = -np.tanh((p[-1] - np.mean(p[-20:])) / (np.std(p[-20:]) + 1e-9))
+        return (
+            self.weights["momentum"] * mom
+            + self.weights["mean_reversion"] * mean_rev
+            + self.weights["sentiment"] * sentiment
+        
 
     def size(
         self,
