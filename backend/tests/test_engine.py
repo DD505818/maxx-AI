@@ -15,6 +15,9 @@ class DummySub(TickSubscriber):
 
 
 def test_engine_run() -> None:
-    engine = TradingEngine(tick_sub=DummySub(), risk=RiskSentinel(start_balance=100))
+    engine = TradingEngine(
+        tick_sub=DummySub(),
+        risk=RiskSentinel(start_balance=100),
+    )
     asyncio.run(engine.run(3))
     assert isinstance(engine.risk.balance, float)

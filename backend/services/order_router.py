@@ -7,6 +7,7 @@ import random
 from typing import Iterable
 
 from .risk_manager import Fill
+from ..models.plan_v2 import Leg
 
 
 class Router:
@@ -19,7 +20,7 @@ class Router:
         """Return the best venue for symbol."""
         return random.choice(self.venues)
 
-    async def execute(self, leg: "Leg") -> Fill:
+    async def execute(self, leg: Leg) -> Fill:
         await asyncio.sleep(0.1)  # simulate network delay
         price = leg.price or 0.0
         return Fill(

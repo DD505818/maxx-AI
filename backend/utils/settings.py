@@ -1,14 +1,19 @@
 """Application settings using Pydantic BaseSettings."""
 
 from pydantic import AnyUrl, Field
-from pydantic_settings import BaseSettings
+from typing import cast
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Load environment variables with defaults."""
 
-    orch_url: AnyUrl = Field("http://localhost:8080", env="ORCH_URL")
-    max_drawdown_pct: float = Field(0.05, env="MAX_DRAWDOWN_PCT")
+    model_config = SettingsConfigDict(extra="ignore")
+
+    orch_url: AnyUrl = Field(
+        cast(AnyUrl, "http://localhost:8080"), alias="ORCH_URL"
+    )
+    max_drawdown_pct: float = Field(default=0.05, alias="MAX_DRAWDOWN_PCT")
 
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]

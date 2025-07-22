@@ -28,7 +28,9 @@ class TradingEngine:
     ) -> None:
         """Create a trading engine with optional dependencies."""
 
-        self.tick_sub = tick_sub or TickSubscriber(["BTCUSD", "ETHUSD", "EURUSD"])
+        self.tick_sub = tick_sub or TickSubscriber(
+            ["BTCUSD", "ETHUSD", "EURUSD"]
+        )
         self.alpha = AlphaEngine()
         self.router = Router()
         self.risk = risk or RiskSentinel()

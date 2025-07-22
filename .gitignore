@@ -1,3 +1,6 @@
 .env
 __pycache__/
 node_modules/
+.next/
+frontend/tsconfig.json
+frontend/next-env.d.ts
