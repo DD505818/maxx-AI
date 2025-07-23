@@ -11,3 +11,10 @@ def test_drawdown_halt() -> None:
 def test_start_balance() -> None:
     risk = RiskSentinel(start_balance=500)
     assert risk.balance == 500
+
+
+def test_value_at_risk() -> None:
+    risk = RiskSentinel()
+    risk.update(Fill(order_id="1", symbol="BTCUSD", side="BUY", qty=1, price=100))
+    risk.update(Fill(order_id="2", symbol="BTCUSD", side="SELL", qty=1, price=90))
+    assert risk.value_at_risk(confidence=0.95) > 0

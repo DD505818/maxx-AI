@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Iterable
+
+import numpy as np
 
 from backend.utils.settings import settings
 
@@ -55,3 +58,13 @@ class RiskSentinel:
 
     def intraday_dd(self) -> float:
         return max(0.0, 1 - self.balance / self.day_start)
+
+    def value_at_risk(self, *, confidence: float = 0.95) -> float:
+        """Return the historical Value-at-Risk at a given confidence level."""
+        if not self.fills:
+            return 0.0
+        pnl: Iterable[float] = (
+            f.qty * (f.price if f.side == "SELL" else -f.price) for f in self.fills
+        )
+        losses = [-p for p in pnl]
+        return float(np.quantile(list(losses), confidence))
