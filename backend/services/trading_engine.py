@@ -28,11 +28,25 @@ class TradingEngine:
     ) -> None:
         """Create a trading engine with optional dependencies."""
 
-        self.tick_sub = tick_sub or TickSubscriber(["BTCUSD", "ETHUSD", "EURUSD"])
+        self.tick_sub = tick_sub or TickSubscriber(
+            ["BTCUSD", "ETHUSD", "EURUSD"]
+        )
         self.alpha = AlphaEngine()
         self.router = Router()
         self.risk = risk or RiskSentinel()
+        self.start_time = time.monotonic()
+        self.last_tick = self.start_time
         self.ws_queues: list[asyncio.Queue[Any]] = []
+
+    @property
+    def uptime(self) -> float:
+        """Return engine uptime in seconds."""
+        return time.monotonic() - self.start_time
+
+    @property
+    def lag(self) -> float:
+        """Return seconds since last processed tick."""
+        return time.monotonic() - self.last_tick
 
     async def state_stream(self) -> Any:
         """Yield engine state for websocket clients."""
@@ -50,6 +64,7 @@ class TradingEngine:
 
     async def start(self) -> None:
         async for tick in self.tick_sub.stream():
+            self.last_tick = time.monotonic()
             self.alpha.update(tick.symbol, tick.price)
             if not session_active():
                 continue
@@ -90,6 +105,7 @@ class TradingEngine:
 
         count = 0
         async for tick in self.tick_sub.stream():
+            self.last_tick = time.monotonic()
             self.alpha.update(tick.symbol, tick.price)
             sent = await sentiment_factor()
             alpha = self.alpha.score(tick.symbol) * (1 + 0.5 * sent)

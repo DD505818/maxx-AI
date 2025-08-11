@@ -7,4 +7,3 @@ def test_tick_stream() -> None:
     tick = asyncio.run(sub.stream().__anext__())
     assert isinstance(tick, Tick)
     assert tick.symbol == "BTCUSD"
-

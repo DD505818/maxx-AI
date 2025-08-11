@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from backend.utils.settings import settings
 
+
 @dataclass
 class Fill:
     order_id: str
@@ -18,7 +19,9 @@ class Fill:
 class RiskSentinel:
     """Simple risk management with configurable drawdown halt."""
 
-    def __init__(self, max_dd: float | None = None, start_balance: float = 100_000.0) -> None:
+    def __init__(
+        self, max_dd: float | None = None, start_balance: float = 100_000.0
+    ) -> None:
         """Create a risk sentinel.
 
         Parameters
@@ -29,7 +32,9 @@ class RiskSentinel:
             Starting account equity for the session.
         """
 
-        self.max_dd = max_dd if max_dd is not None else settings.max_drawdown_pct
+        self.max_dd = (
+            max_dd if max_dd is not None else settings.max_drawdown_pct
+        )
         self.max_dd = max(0.0, min(1.0, self.max_dd))
         self.balance = float(start_balance)
         self.day_start = self.balance

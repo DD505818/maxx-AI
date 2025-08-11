@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import AsyncGenerator
+import time
 
 from fastapi import FastAPI, WebSocket
 from starlette.websockets import WebSocketDisconnect
@@ -23,8 +23,15 @@ async def startup() -> None:
 
 
 @app.get("/healthz")
-async def healthz() -> dict[str, str]:
-    return {"status": "ok"}
+async def healthz() -> dict[str, float | str]:
+    """Return service health metrics."""
+    lag = engine.lag
+    reason = "" if lag < 5 else "feed lagging"
+    return {
+        "uptime": round(engine.uptime, 3),
+        "lag": round(lag, 3),
+        "reason": reason,
+    }
 
 
 @app.websocket("/ws/agents")

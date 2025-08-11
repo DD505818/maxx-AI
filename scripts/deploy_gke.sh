@@ -11,9 +11,9 @@ ORCH_IMG="${REGISTRY}/orchestrator:latest"
 FRONTEND_IMG="${REGISTRY}/frontend:latest"
 
 # Build images
-docker build -t "$BACKEND_IMG" -f backend/Dockerfile backend
+docker build -t "$BACKEND_IMG" -f docker/backend.Dockerfile backend
 docker build -t "$ORCH_IMG" -f Dockerfile.orchestrator .
-docker build -t "$FRONTEND_IMG" -f frontend/Dockerfile frontend
+docker build -t "$FRONTEND_IMG" -f docker/frontend.Dockerfile frontend
 
 # Push images
 docker push "$BACKEND_IMG"
